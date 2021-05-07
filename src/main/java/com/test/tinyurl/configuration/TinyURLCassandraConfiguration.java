@@ -13,42 +13,52 @@ import org.springframework.data.cassandra.repository.config.EnableCassandraRepos
 import java.util.Arrays;
 import java.util.List;
 
-
 @Configuration
 @EnableCassandraRepositories(basePackages = "com.test.tinyurl.model")
 public class TinyURLCassandraConfiguration extends AbstractCassandraConfiguration {
-    @Value("${spring.data.cassandra.keyspace-name}")
-    private String keyspaceName;
+	@Value("${spring.data.cassandra.keyspace-name}")
+	private String keyspaceName;
 
-    @Override
-    protected String getKeyspaceName() {
-        return keyspaceName;
-    }
+	@Override
+	protected String getKeyspaceName() {
+		return keyspaceName;
+	}
 
+	@Value("${spring.data.cassandra.contact-points}")
+	private String contactPoints;
 
-    @Override
-    public String[] getEntityBasePackages() {
-        return new String[]{TinyURLData.class.getPackage().getName()};
-    }
+	@Value("${spring.data.cassandra.port}")
+	private int port;
 
-    @Override
-    protected List<CreateKeyspaceSpecification> getKeyspaceCreations() {
-        final CreateKeyspaceSpecification specification =
-                CreateKeyspaceSpecification.createKeyspace(keyspaceName)
-                        .ifNotExists()
-                        .withSimpleReplication(1)
-                        .with(KeyspaceOption.DURABLE_WRITES, false);
-        return Arrays.asList(specification);
-    }
+	@Override
+	public String getContactPoints() {
+		return contactPoints;
+	}
 
-    @Override
-    protected List<DropKeyspaceSpecification> getKeyspaceDrops() {
-        return Arrays.asList(DropKeyspaceSpecification.dropKeyspace(keyspaceName));
-    }
+	@Override
+	protected int getPort() {
+		return port;
+	}
 
+	@Override
+	public String[] getEntityBasePackages() {
+		return new String[] { TinyURLData.class.getPackage().getName() };
+	}
 
-    @Override
-    public SchemaAction getSchemaAction() {
-        return SchemaAction.RECREATE_DROP_UNUSED;
-    }
+	@Override
+	protected List<CreateKeyspaceSpecification> getKeyspaceCreations() {
+		final CreateKeyspaceSpecification specification = CreateKeyspaceSpecification.createKeyspace(keyspaceName)
+				.ifNotExists().withSimpleReplication(1).with(KeyspaceOption.DURABLE_WRITES, false);
+		return Arrays.asList(specification);
+	}
+
+	@Override
+	protected List<DropKeyspaceSpecification> getKeyspaceDrops() {
+		return Arrays.asList(DropKeyspaceSpecification.dropKeyspace(keyspaceName));
+	}
+
+	@Override
+	public SchemaAction getSchemaAction() {
+		return SchemaAction.RECREATE_DROP_UNUSED;
+	}
 }

@@ -1,6 +1,6 @@
 FROM java:8
 EXPOSE 8080
-ENV CASSANDRA_HOST=localhost
+ENV CASSANDRA_HOST=cassandra
 ENV CASSANDRA_PORT=9042
 
 # Wait for it script to wait for cassandra ready [https://github.com/vishnubob/wait-for-it/blob/master/wait-for-it.sh]
